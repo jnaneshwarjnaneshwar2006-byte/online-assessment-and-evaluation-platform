@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Student Login - EduLearn Hub{% endblock %}
+
+{% block content %}
+<section class="fade-in-el" style="padding: 60px 20px; display: flex; align-items: center; justify-content: center; flex-grow: 1;">
+    <div class="glass-panel" style="width: 100%; max-width: 450px; padding: 40px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="EL" style="height: 60px; width: 60px; border-radius: 12px; margin-bottom: 12px; box-shadow: var(--shadow-premium);">
+            <span class="login-portal-badge student"><i class="fas fa-user-graduate"></i> Student Portal</span>
+            <h2 style="font-size: 1.75rem; margin-top: 12px;">Welcome Back</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">Access your customized learning dashboard</p>
+        </div>
+
+        <form id="login-form">
+            <input type="hidden" id="login-role" value="student">
+
+            <!-- Email -->
+            <div class="form-group">
+                <label class="form-label" for="login-email">Registered Email</label>
+                <input type="email" id="login-email" class="form-control" placeholder="name@domain.com" required>
+            </div>
+
+            <!-- Standard Password section -->
+            <div id="login-password-section">
+                <div class="form-group">
+                    <label class="form-label" for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••">
+                </div>
+            </div>
+
+            <!-- CAPTCHA section -->
+            <div id="login-captcha-section" class="form-group">
+                <label class="form-label" for="login-captcha-val">Security CAPTCHA</label>
+                <div class="captcha-container">
+                    <img id="captcha-image-element" src="" alt="CAPTCHA" class="captcha-img" title="Click to refresh">
+                    <button type="button" id="refresh-captcha-btn" class="refresh-captcha-btn" title="Refresh CAPTCHA"><i class="fas fa-rotate"></i></button>
+                    <input type="text" id="login-captcha-val" class="form-control" style="flex-grow:1;" placeholder="Enter code">
+                </div>
+            </div>
+
+            <!-- OTP Login section (hidden by default) -->
+            <div id="login-otp-section" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label" for="login-otp-code">One Time Password (OTP)</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="login-otp-code" class="form-control" style="flex-grow: 1;" placeholder="6-digit code">
+                        <button type="button" id="send-otp-btn" class="btn btn-secondary" style="padding: 0 15px; font-size: 0.85rem; flex-shrink: 0;">Send OTP</button>
+                    </div>
+                    <span style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Demo OTP: <strong>123456</strong></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 15px;">Log In</button>
+        </form>
+
+        <div style="margin-top: 25px; text-align: center; font-size: 0.9rem;">
+            <!-- Switch login mode buttons -->
+            <button id="toggle-otp-mode" class="btn btn-secondary" style="border:none; background:none; font-size:0.85rem; color:var(--primary); padding:0; cursor:pointer;">Login via OTP</button>
+            <button id="toggle-password-mode" class="btn btn-secondary" style="border:none; background:none; font-size:0.85rem; color:var(--primary); padding:0; cursor:pointer; display:none;">Login via Password</button>
+            
+            <p style="color: var(--text-secondary); margin-top: 15px;">
+                Don't have an account? <a href="/signup" style="color: var(--primary); font-weight: 500;">Sign up as Student</a>
+            </p>
+        </div>
+
+        <!-- Links to the other portals -->
+        <div class="login-portal-switch">
+            <a href="/teacher/login"><i class="fas fa-chalkboard-user"></i> Teacher Login</a>
+            <span class="login-portal-divider">•</span>
+            <a href="/admin/login"><i class="fas fa-user-shield"></i> Admin Login</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/portal-login.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

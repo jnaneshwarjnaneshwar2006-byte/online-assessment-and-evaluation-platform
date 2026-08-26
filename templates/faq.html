@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Frequently Asked Questions - EduLearn Hub{% endblock %}
+
+{% block content %}
+<section class="fade-in-el" style="padding: 60px 20px; max-width: 800px; margin: 0 auto; width:100%;">
+    <h1 style="font-size: 2.2rem; text-align: center; margin-bottom: 40px; font-family: 'Outfit';">Frequently Asked Questions</h1>
+    
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="glass-panel" style="padding: 25px;">
+            <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 8px;">Q: How does the AI Quiz Generator work?</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+                A: When a student or teacher requests a quiz, our system invokes the Google Gemini API (gemini-2.0-flash model) with structured parameters for category (SSC, Railway, Banking) and difficulty (Easy, Medium, Hard). It returns questions with option lists, correct answers, and detailed explanations which are instantly saved to our database.
+            </p>
+        </div>
+
+        <div class="glass-panel" style="padding: 25px;">
+            <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 8px;">Q: What is the fallback system if the Gemini API fails?</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+                A: If the API key is not configured, or if network connectivity fails, our platform automatically draws random questions from a pre-defined local question bank compiled by educators for SSC, Railway, and Banking. This ensures mock tests always load without crashing the system.
+            </p>
+        </div>
+
+        <div class="glass-panel" style="padding: 25px;">
+            <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 8px;">Q: How is teacher feedback submitted?</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+                A: A teacher logs in, selects a student from their student roster, reviews the student's attempt statistics, and fills out the feedback editor. Submitting feedback inserts a feedback record in our database and issues a real-time notification to the student's dashboard.
+            </p>
+        </div>
+
+        <div class="glass-panel" style="padding: 25px;">
+            <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 8px;">Q: How does the CAPTCHA protect the login route?</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+                A: Our login system uses a Pillow-generated dynamic image CAPTCHA. The random characters are generated and stored in a secure Flask session. The login controller verifies that the client input matches the session CAPTCHA before checking passwords.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

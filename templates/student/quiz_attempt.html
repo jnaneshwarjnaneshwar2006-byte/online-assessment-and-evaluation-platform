@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Active Exam - EduLearn Hub{% endblock %}
+
+{% block content %}
+<input type="hidden" id="active-quiz-id" value="{{ quiz_id }}">
+
+<div class="dashboard-content" style="padding: 40px 20px; max-width: 1200px; margin: 0 auto; width:100%;">
+    <div class="dashboard-header" style="margin-bottom: 25px;">
+        <div class="dashboard-title">
+            <h2 id="attempt-quiz-title">Mock Exam</h2>
+            <p>Read each question carefully and select one correct answer.</p>
+        </div>
+    </div>
+
+    <!-- Active attempt grid: Left (Question details), Right (Timer and Selector Grid) -->
+    <div id="active-quiz-attempt-view" class="quiz-attempt-container">
+        <!-- Question Block -->
+        <div class="glass-panel quiz-question-box fade-in-el" style="height: fit-content;">
+            <div class="quiz-question-header">
+                <span class="q-num" id="attempt-q-num">Question 1 of 0</span>
+                <span class="q-marks" id="attempt-q-marks">Marks: 10</span>
+            </div>
+            
+            <div class="question-text" id="attempt-question-text">
+                Loading exam questions...
+            </div>
+            
+            <!-- Choice Options -->
+            <div class="options-list" id="attempt-options-list">
+                <!-- Loaded dynamically via quiz.js -->
+            </div>
+            
+            <!-- Action buttons -->
+            <div class="quiz-nav-buttons">
+                <button id="quiz-prev-btn" class="btn btn-secondary" style="visibility:hidden;"><i class="fas fa-arrow-left"></i> Previous</button>
+                <button id="quiz-next-btn" class="btn btn-secondary">Next Question <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Sidebar Info: Timer and Selector Grid -->
+        <div class="quiz-attempt-sidebar">
+            <!-- Timer Card -->
+            <div class="glass-panel timer-box">
+                <div class="timer-label">Time Remaining</div>
+                <div class="timer-val" id="active-timer-val">00:00</div>
+            </div>
+            
+            <!-- Question list cards selectors -->
+            <div class="glass-panel question-selector-box">
+                <div class="q-grid-title">Question Grid</div>
+                <div class="q-selector-grid" id="sidebar-selector-grid">
+                    <!-- Loaded dynamically via quiz.js -->
+                </div>
+                
+                <div style="margin-top:20px; font-size:0.75rem; color:var(--text-muted); display:flex; flex-direction:column; gap:8px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="display:inline-block; width:12px; height:12px; background:var(--success); border-radius:3px;"></span> Answered
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="display:inline-block; width:12px; height:12px; background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:3px;"></span> Unanswered
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="display:inline-block; width:12px; height:12px; border:1.5px solid var(--primary); border-radius:3px;"></span> Active Question
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %}

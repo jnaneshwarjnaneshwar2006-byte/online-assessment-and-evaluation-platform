@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard - EduLearn Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Teacher</span>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/students"><i class="fas fa-user-group"></i> My Students</a></li>
+            <li class="sidebar-item"><a href="/teacher/results"><i class="fas fa-clipboard-check"></i> Quiz Results</a></li>
+            <li class="sidebar-item active"><a href="/teacher/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/create"><i class="fas fa-file-pen"></i> Create Quiz</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/ai-generator"><i class="fas fa-magic"></i> AI Quiz Generator</a></li>
+            <li class="sidebar-item"><a href="/activity-teacher"><i class="fas fa-list-check"></i> Action Log</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Student Leaderboard</h2>
+                <p>Platform-wide rankings based on quiz performance</p>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="glass-panel" style="padding: 8px; display:inline-flex; gap:6px; margin-bottom:25px;">
+            <button class="btn btn-primary leaderboard-tab-btn active" data-tab="overall" style="padding:10px 18px;">
+                <i class="fas fa-globe"></i> Overall Ranking
+            </button>
+            <button class="btn btn-secondary leaderboard-tab-btn" data-tab="per-quiz" style="padding:10px 18px;">
+                <i class="fas fa-list-check"></i> Per-Quiz Ranking
+            </button>
+        </div>
+
+        <!-- Per-quiz selector (hidden by default) -->
+        <div id="leaderboard-quiz-selector" class="glass-panel" style="padding: 20px; margin-bottom:25px; display:none;">
+            <label class="form-label" style="margin-bottom:10px; display:block;">Select a quiz to view its leaderboard</label>
+            <select id="leaderboard-quiz-select" class="form-control" style="max-width:400px;">
+                <option value="">Loading quizzes...</option>
+            </select>
+        </div>
+
+        <!-- Top 3 Podium -->
+        <div id="leaderboard-podium" class="leaderboard-podium-grid"></div>
+
+        <!-- Full ranking table -->
+        <div class="glass-panel" style="padding: 25px;">
+            <div class="panel-header">
+                <h3 class="panel-title"><i class="fas fa-table-list" style="color:var(--primary)"></i> Full Rankings</h3>
+            </div>
+            <div class="custom-table-container">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Student</th>
+                            <th id="leaderboard-score-col-header">Average Score</th>
+                            <th id="leaderboard-extra-col-header">Attempts</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-table-body">
+                        <!-- Loaded dynamically via teacher_results.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/teacher.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/teacher_results.js') }}"></script>
+{% endblock %}

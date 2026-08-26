@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Teachers - EduLearn Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Admin</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/admin/students"><i class="fas fa-user-graduate"></i> Manage Students</a></li>
+            <li class="sidebar-item active"><a href="/admin/teachers"><i class="fas fa-chalkboard-user"></i> Manage Teachers</a></li>
+            <li class="sidebar-item"><a href="/admin/create-teacher"><i class="fas fa-user-plus"></i> Onboard Teacher</a></li>
+            <li class="sidebar-item"><a href="/admin/blocked-users"><i class="fas fa-user-slash"></i> Blocked Accounts</a></li>
+            <li class="sidebar-item"><a href="/admin/activity-logs"><i class="fas fa-list-check"></i> System Logs</a></li>
+            <li class="sidebar-item"><a href="/admin/quiz-statistics"><i class="fas fa-chart-column"></i> Quiz Statistics</a></li>
+            <li class="sidebar-item"><a href="/admin/website-analytics"><i class="fas fa-globe"></i> Web Analytics</a></li>
+            <li class="sidebar-item"><a href="/admin/results-overview"><i class="fas fa-clipboard-list"></i> Quiz Results Overview</a></li>
+            <li class="sidebar-item"><a href="/admin/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Manage Teachers</h2>
+                <p>Onboard educators, assign departments, and configure user permissions.</p>
+            </div>
+            
+            <a href="/admin/create-teacher" class="btn btn-primary"><i class="fas fa-user-plus"></i> Onboard Teacher</a>
+        </div>
+
+        <div class="glass-panel" style="padding: 25px;">
+            <div class="custom-table-container">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Teacher Name</th>
+                            <th>Teacher ID</th>
+                            <th>Email Address</th>
+                            <th>Department</th>
+                            <th>Experience</th>
+                            <th>Status State</th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-teachers-list-body">
+                        <!-- Loaded dynamically via admin.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

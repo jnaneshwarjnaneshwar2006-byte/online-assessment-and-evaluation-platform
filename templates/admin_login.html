@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - EduLearn Hub{% endblock %}
+
+{% block content %}
+<section class="fade-in-el" style="padding: 60px 20px; display: flex; align-items: center; justify-content: center; flex-grow: 1;">
+    <div class="glass-panel portal-card admin" style="width: 100%; max-width: 450px; padding: 40px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="EL" style="height: 60px; width: 60px; border-radius: 12px; margin-bottom: 12px; box-shadow: var(--shadow-premium);">
+            <span class="login-portal-badge admin"><i class="fas fa-user-shield"></i> Admin Portal</span>
+            <h2 style="font-size: 1.75rem; margin-top: 12px;">Administrator Login</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">Restricted access — authorized administrators only</p>
+        </div>
+
+        <form id="admin-login-form">
+            <!-- Email -->
+            <div class="form-group">
+                <label class="form-label" for="admin-login-email">Admin Email</label>
+                <input type="email" id="admin-login-email" class="form-control" placeholder="admin@domain.com" required>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label class="form-label" for="admin-login-password">Password</label>
+                <input type="password" id="admin-login-password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <!-- CAPTCHA section -->
+            <div class="form-group">
+                <label class="form-label" for="admin-login-captcha-val">Security CAPTCHA</label>
+                <div class="captcha-container">
+                    <img id="admin-captcha-image-element" src="" alt="CAPTCHA" class="captcha-img" title="Click to refresh">
+                    <button type="button" id="admin-refresh-captcha-btn" class="refresh-captcha-btn" title="Refresh CAPTCHA"><i class="fas fa-rotate"></i></button>
+                    <input type="text" id="admin-login-captcha-val" class="form-control" style="flex-grow:1;" placeholder="Enter code" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary portal-submit-btn admin" style="width: 100%; padding: 12px; margin-top: 15px;">
+                <i class="fas fa-shield-halved"></i> Log In to Admin Dashboard
+            </button>
+        </form>
+
+        <div style="margin-top: 25px; text-align: center; font-size: 0.9rem;">
+            <p style="color: var(--text-secondary);">
+                <i class="fas fa-lock" style="margin-right:5px;"></i> This area is restricted to the platform administrator.
+            </p>
+        </div>
+
+        <!-- Links to the other portals -->
+        <div class="login-portal-switch">
+            <a href="/login"><i class="fas fa-user-graduate"></i> Student Login</a>
+            <span class="login-portal-divider">•</span>
+            <a href="/teacher/login"><i class="fas fa-chalkboard-user"></i> Teacher Login</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/portal-login.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/portal_login.js') }}"></script>
+{% endblock %}

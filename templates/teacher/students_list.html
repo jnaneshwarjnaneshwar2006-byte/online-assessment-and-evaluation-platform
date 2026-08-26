@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Student Roster - EduLearn Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Teacher</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item active"><a href="/teacher/students"><i class="fas fa-user-group"></i> My Students</a></li>
+            <li class="sidebar-item"><a href="/teacher/results"><i class="fas fa-clipboard-check"></i> Quiz Results</a></li>
+            <li class="sidebar-item"><a href="/teacher/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/create"><i class="fas fa-file-pen"></i> Create Quiz</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/ai-generator"><i class="fas fa-magic"></i> AI Quiz Generator</a></li>
+            <li class="sidebar-item"><a href="/activity-teacher"><i class="fas fa-list-check"></i> Action Log</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>My Students</h2>
+                <p>Monitor student performance and submit academic feedback reviews</p>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="padding: 25px;">
+            <div class="custom-table-container">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Student Details</th>
+                            <th>Email Address</th>
+                            <th>Attempts Completed</th>
+                            <th>Average Score</th>
+                            <th>Evaluation</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacher-students-list-body">
+                        <!-- Loaded dynamically via teacher.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/teacher.js') }}"></script>
+{% endblock %}

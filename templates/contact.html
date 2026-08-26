@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - EduLearn Hub{% endblock %}
+
+{% block content %}
+<section class="fade-in-el" style="padding: 60px 20px; max-width: 600px; margin: 0 auto; width:100%;">
+    <div class="glass-panel" style="padding: 40px;">
+        <h1 style="font-size: 2rem; margin-bottom: 15px; text-align: center; font-family: 'Outfit';">Contact Support</h1>
+        <p style="text-align: center; color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 30px;">Have questions? Drop us a message and our team will get back to you shortly.</p>
+
+        <form onsubmit="event.preventDefault(); showToast('Your query has been recorded. Support team will email you.'); this.reset();">
+            <div class="form-group">
+                <label class="form-label">Your Name</label>
+                <input type="text" class="form-control" placeholder="John Doe" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-control" placeholder="name@domain.com" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Inquiry Subject</label>
+                <select class="form-control" style="background:var(--bg-main);" required>
+                    <option value="">Select a topic</option>
+                    <option value="technical">Technical Issue</option>
+                    <option value="academic">Academic / Question Correction</option>
+                    <option value="admin">Teacher Request</option>
+                    <option value="other">General Feedback</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Message Details</label>
+                <textarea class="form-control" rows="4" placeholder="Explain your request in detail..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 15px;">Submit Message</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

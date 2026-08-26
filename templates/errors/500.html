@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}500 Internal Error - EduLearn Hub{% endblock %}
+
+{% block content %}
+<section class="fade-in-el" style="padding: 100px 20px; text-align: center; flex-grow:1; display:flex; align-items:center; justify-content:center;">
+    <div class="glass-panel" style="padding: 50px 40px; max-width: 500px; width:100%;">
+        <div style="font-size: 4rem; color: var(--danger); margin-bottom: 20px;"><i class="fas fa-triangle-exclamation"></i></div>
+        <h1 style="font-size: 2.2rem; margin-bottom: 15px; font-family:'Outfit';">500 Server Error</h1>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 30px;">
+            An unexpected error occurred on the server. Our administrators have been notified. Please try again later.
+        </p>
+        <a href="/" class="btn btn-primary" style="padding: 12px 24px;">Return Home</a>
+    </div>
+</section>
+{% endblock %}

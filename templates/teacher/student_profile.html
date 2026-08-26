@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Evaluate Student - EduLearn Hub{% endblock %}
+
+{% block content %}
+<input type="hidden" id="target-student-id" value="{{ student_id }}">
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Teacher</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item active"><a href="/teacher/students"><i class="fas fa-user-group"></i> My Students</a></li>
+            <li class="sidebar-item"><a href="/teacher/results"><i class="fas fa-clipboard-check"></i> Quiz Results</a></li>
+            <li class="sidebar-item"><a href="/teacher/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/create"><i class="fas fa-file-pen"></i> Create Quiz</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/ai-generator"><i class="fas fa-magic"></i> AI Quiz Generator</a></li>
+            <li class="sidebar-item"><a href="/activity-teacher"><i class="fas fa-list-check"></i> Action Log</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div id="teacher-student-detail-view" class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Student Evaluation Profile</h2>
+                <p>Review student scores and draft guidance reports</p>
+            </div>
+            
+            <a href="/teacher/students" class="btn btn-secondary"><i class="fas fa-chevron-left"></i> Back to Roster</a>
+        </div>
+
+        <!-- Student Meta Profile Summary -->
+        <div class="glass-panel student-profile-summary fade-in-el">
+            <img id="stu-avatar-img" src="https://ui-avatars.com/api/?name=Student&background=3b82f6&color=fff" alt="" class="student-profile-avatar">
+            <div style="flex-grow:1;">
+                <h3 id="stu-name" style="font-size:1.45rem; margin-bottom:8px;">Student Name</h3>
+                <div class="student-meta-details">
+                    <div class="student-meta-item">Email: <strong id="stu-email">--</strong></div>
+                    <div class="student-meta-item">Mobile: <strong id="stu-mobile">--</strong></div>
+                    <div class="student-meta-item">Joined: <strong id="stu-joined">--</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid: Left (Quiz attempts history), Right (Submit feedback & past logs) -->
+        <div class="dashboard-grid">
+            <!-- Left panel: Attempts history -->
+            <div class="glass-panel" style="padding:25px; height:fit-content;">
+                <h3 style="margin-bottom:20px; border-bottom:1px solid var(--border-color); padding-bottom:12px; font-size:1.15rem;"><i class="fas fa-chart-bar" style="color:var(--primary)"></i> Exam History</h3>
+                
+                <div class="custom-table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Difficulty</th>
+                                <th>Score</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stu-attempts-table-body">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right panel: Submit feedback -->
+            <div style="display:flex; flex-direction:column; gap:30px;">
+                <!-- Feed Editor -->
+                <div class="glass-panel" style="padding:25px;">
+                    <h3 style="margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:12px; font-size:1.15rem;"><i class="fas fa-comment-dots" style="color:var(--secondary)"></i> Submit Evaluation</h3>
+                    
+                    <form id="teacher-submit-feedback-form">
+                        <div class="form-group">
+                            <label class="form-label">Feedback Type</label>
+                            <select id="fb-type" class="form-control" style="background:var(--bg-main);" required>
+                                <option value="Performance">Performance Review</option>
+                                <option value="Guidance">Preparation Guidance</option>
+                                <option value="Behavior">Class Room Review</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Target Topic / Subject</label>
+                            <input type="text" id="fb-topic" class="form-control" placeholder="e.g. Basel III, Indian Railways" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Feedback Title</label>
+                            <input type="text" id="fb-title" class="form-control" placeholder="e.g. Focus on Quantitative bank equations" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Review Details</label>
+                            <textarea id="fb-message" class="form-control" rows="3" placeholder="Enter detailed analysis..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; padding:10px;"><i class="fas fa-paper-plane"></i> Submit Feedback</button>
+                    </form>
+                </div>
+
+                <!-- Past logs -->
+                <div class="glass-panel" style="padding:25px;">
+                    <h3 style="margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:12px; font-size:1.15rem;"><i class="fas fa-clock-rotate-left" style="color:var(--accent)"></i> History of Feedbacks</h3>
+                    <div id="stu-past-feedback-list" class="notification-list">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/teacher.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/teacher.js') }}"></script>
+{% endblock %}

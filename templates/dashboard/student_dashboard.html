@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - EduLearn Hub{% endblock %}
+
+{% block content %}
+<input type="hidden" id="dashboard-role-identifier" value="student">
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Student</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item active"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/student/quiz/list"><i class="fas fa-clipboard-question"></i> Mock Exams</a></li>
+            <li class="sidebar-item"><a href="/student/quiz/history"><i class="fas fa-clock-rotate-left"></i> Quiz History</a></li>
+            <li class="sidebar-item"><a href="/student/analytics"><i class="fas fa-chart-pie"></i> Score Analytics</a></li>
+            <li class="sidebar-item"><a href="/student/feedback"><i class="fas fa-comments"></i> Teacher Feedbacks</a></li>
+            <li class="sidebar-item"><a href="/student/recommendations"><i class="fas fa-brain"></i> AI Study Advisor</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Student Workspace</h2>
+                <p>Welcome back, {{ user.name.split(' ')[0] }}! Review your mock stats.</p>
+            </div>
+            
+            <a href="/student/quiz/list" class="btn btn-primary"><i class="fas fa-play"></i> Attempt Quiz</a>
+        </div>
+
+        <!-- Quick Summary Metrics -->
+        <div class="stats-grid">
+            <div class="glass-panel stats-card primary fade-in-el">
+                <div class="stats-info">
+                    <span class="stats-label">Total Attempts</span>
+                    <span class="stats-value" id="dash-student-total-attempts">0</span>
+                </div>
+                <div class="stats-icon"><i class="fas fa-clipboard-check"></i></div>
+            </div>
+            
+            <div class="glass-panel stats-card success fade-in-el">
+                <div class="stats-info">
+                    <span class="stats-label">Average Score</span>
+                    <span class="stats-value" id="dash-student-avg-score">0.0%</span>
+                </div>
+                <div class="stats-icon"><i class="fas fa-percent"></i></div>
+            </div>
+
+            <div class="glass-panel stats-card warning fade-in-el">
+                <div class="stats-info">
+                    <span class="stats-label">User Level</span>
+                    <span class="stats-value">Student</span>
+                </div>
+                <div class="stats-icon"><i class="fas fa-user-graduate"></i></div>
+            </div>
+        </div>
+
+        <!-- Grid: Left (Recent attempts), Right (AI Recommendations) -->
+        <div class="dashboard-grid">
+            <!-- Left panel -->
+            <div class="glass-panel" style="padding: 25px;">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-history" style="color:var(--primary)"></i> Recent Quiz Attempts</h3>
+                    <a href="/student/quiz/history" style="font-size:0.85rem; color:var(--primary);">View All</a>
+                </div>
+                
+                <div class="custom-table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Exam Title</th>
+                                <th>Category</th>
+                                <th>Score Obtained</th>
+                                <th>Time Taken</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="student-recent-attempts-body">
+                            <!-- Loaded dynamically via javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right panel -->
+            <div class="glass-panel" style="padding: 25px;">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-brain" style="color:var(--secondary)"></i> AI Prep Advisor</h3>
+                </div>
+                
+                <div id="dash-recommendations-list" class="notification-list">
+                    <!-- Loaded dynamically via dashboard.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

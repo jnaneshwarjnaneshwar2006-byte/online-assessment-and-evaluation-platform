@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Results - EduLearn Hub{% endblock %}
+
+{% block content %}
+<input type="hidden" id="results-attempt-id" value="{{ attempt_id }}">
+
+<section id="quiz-results-display-view" style="padding: 40px 20px; max-width: 900px; margin: 0 auto; width:100%;">
+    <!-- Top Result Banner Card -->
+    <div class="glass-panel results-header-card fade-in-el">
+        <span id="res-category" class="category-tag">General</span>
+        <span id="res-difficulty" class="difficulty-badge" style="margin-left: 10px;">Medium</span>
+        
+        <h2 id="res-title" style="font-size: 2rem; margin: 15px 0 5px;">Mock Exam Completed</h2>
+        <p style="color: var(--text-secondary);">Here is your performance summary report</p>
+        
+        <div class="score-display" id="res-score">0 / 0</div>
+        <p style="font-weight:600; color:var(--text-primary); font-size:1.1rem;">Overall Percentage: <span id="res-percentage" style="color:var(--primary);">0%</span></p>
+        
+        <!-- Breakdown statistics -->
+        <div class="result-breakdown-grid">
+            <div class="breakdown-card">
+                <div style="font-size:1.5rem; color:var(--success);"><i class="fas fa-circle-check"></i></div>
+                <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; margin-top:5px;">Correct Answers</div>
+                <div id="res-correct" style="font-size:1.3rem; font-weight:700; margin-top:3px;">0</div>
+            </div>
+            <div class="breakdown-card">
+                <div style="font-size:1.5rem; color:var(--danger);"><i class="fas fa-circle-xmark"></i></div>
+                <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; margin-top:5px;">Wrong Answers</div>
+                <div id="res-wrong" style="font-size:1.3rem; font-weight:700; margin-top:3px;">0</div>
+            </div>
+            <div class="breakdown-card">
+                <div style="font-size:1.5rem; color:var(--accent);"><i class="fas fa-stopwatch"></i></div>
+                <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; margin-top:5px;">Time Taken</div>
+                <div id="res-time" style="font-size:1.3rem; font-weight:700; margin-top:3px;">0m 0s</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; display:flex; gap:15px; justify-content:center;">
+            <a href="/student/quiz/list" class="btn btn-primary">Take Another Exam</a>
+            <a href="/dashboard" class="btn btn-secondary">Go to Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Review Section -->
+    <h3 style="margin-bottom: 20px; font-size: 1.45rem;"><i class="fas fa-clipboard-list" style="color:var(--primary); margin-right:8px;"></i> Question-by-Question Review</h3>
+    
+    <div id="res-questions-review-list">
+        <!-- Loaded dynamically via quiz.js -->
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %}

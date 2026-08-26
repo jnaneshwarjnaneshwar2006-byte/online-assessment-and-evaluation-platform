@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Activity Logs - EduLearn Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>{{ user.role }}</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>System Activity Logs</h2>
+                <p>Track your recent signups, logins, and exam submissions</p>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="padding:30px; max-width: 900px;">
+            <h3 style="margin-bottom:20px; font-size:1.2rem;"><i class="fas fa-terminal" style="color:var(--success); margin-right:8px;"></i> User Log Audit</h3>
+            
+            <div id="admin-logs-console" class="logs-console" style="max-height: 450px;">
+                <!-- Loaded dynamically via js -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+<script>
+    // Since this can be accessed by both admin and other roles, 
+    // let's custom populate logs specifically for student if student logs in, or load all if admin.
+    document.addEventListener("DOMContentLoaded", () => {
+        const consoleEl = document.getElementById("admin-logs-console");
+        const role = "{{ user.role }}";
+        
+        if (role !== "admin") {
+            // Students or teachers get their own logs specifically
+            fetch("/api/teacher/activities")
+                .then(res => res.json())
+                .then(logs => {
+                    if (logs.length === 0) {
+                        consoleEl.innerHTML = '<div class="log-row">No logs found.</div>';
+                        return;
+                    }
+                    consoleEl.innerHTML = logs.map(log => `
+                        <div class="log-row">
+                            <span class="log-timestamp">[${new Date(log.created_at).toISOString()}]</span> 
+                            <span class="log-action">${escapeHTML(log.action)}</span> - 
+                            <span class="log-details">${escapeHTML(log.details)}</span> 
+                            <small style="color:var(--text-muted)">[IP: ${log.ip_address}]</small>
+                        </div>
+                    `).join("");
+                })
+                .catch(err => console.error(err));
+        }
+    });
+</script>
+{% endblock %}

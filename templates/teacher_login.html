@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Login - EduLearn Hub{% endblock %}
+
+{% block content %}
+<section class="fade-in-el" style="padding: 60px 20px; display: flex; align-items: center; justify-content: center; flex-grow: 1;">
+    <div class="glass-panel portal-card teacher" style="width: 100%; max-width: 480px; padding: 40px;">
+        <div style="text-align: center; margin-bottom: 25px;">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="EL" style="height: 60px; width: 60px; border-radius: 12px; margin-bottom: 12px; box-shadow: var(--shadow-premium);">
+            <span class="login-portal-badge teacher"><i class="fas fa-chalkboard-user"></i> Teacher Portal</span>
+        </div>
+
+        <!-- Login / Sign Up mode tabs -->
+        <div class="portal-mode-tabs teacher" role="tablist" aria-label="Login or sign up">
+            <button type="button" class="portal-mode-tab active" data-mode="login" role="tab" aria-selected="true">Log In</button>
+            <button type="button" class="portal-mode-tab" data-mode="signup" role="tab" aria-selected="false">Sign Up</button>
+        </div>
+
+        <!-- ============ LOGIN MODE ============ -->
+        <div id="teacher-login-mode">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <h2 style="font-size: 1.5rem;">Teacher Login</h2>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">Manage quizzes, review results, and track student progress</p>
+            </div>
+
+            <form id="teacher-login-form">
+                <div class="form-group">
+                    <label class="form-label" for="teacher-login-email">Registered Email</label>
+                    <input type="email" id="teacher-login-email" class="form-control" placeholder="teacher@domain.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="teacher-login-password">Password</label>
+                    <input type="password" id="teacher-login-password" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="teacher-login-captcha-val">Security CAPTCHA</label>
+                    <div class="captcha-container">
+                        <img id="teacher-captcha-image-element" src="" alt="CAPTCHA" class="captcha-img" title="Click to refresh">
+                        <button type="button" id="teacher-refresh-captcha-btn" class="refresh-captcha-btn" title="Refresh CAPTCHA"><i class="fas fa-rotate"></i></button>
+                        <input type="text" id="teacher-login-captcha-val" class="form-control" style="flex-grow:1;" placeholder="Enter code" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary portal-submit-btn teacher" style="width: 100%; padding: 12px; margin-top: 15px;">
+                    <i class="fas fa-right-to-bracket"></i> Log In to Teacher Dashboard
+                </button>
+            </form>
+        </div>
+
+        <!-- ============ SIGN UP MODE ============ -->
+        <div id="teacher-signup-mode" style="display:none;">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <h2 style="font-size: 1.5rem;">Create Teacher Account</h2>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">New here? Set up your teacher profile to start creating quizzes</p>
+            </div>
+
+            <form id="teacher-signup-form">
+                <div class="form-group">
+                    <label class="form-label" for="teacher-signup-name">Full Name</label>
+                    <input type="text" id="teacher-signup-name" class="form-control" placeholder="Jane Smith" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="teacher-signup-email">Email Address</label>
+                    <input type="email" id="teacher-signup-email" class="form-control" placeholder="jane@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="teacher-signup-mobile">Mobile Number</label>
+                    <input type="tel" id="teacher-signup-mobile" class="form-control" placeholder="9876543210" pattern="[0-9]{10}" title="Ten digit mobile number" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="teacher-signup-department">Department / Subject</label>
+                    <input type="text" id="teacher-signup-department" class="form-control" placeholder="e.g. SSC Prep, Mathematics" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="teacher-signup-qualification">Qualification</label>
+                    <input type="text" id="teacher-signup-qualification" class="form-control" placeholder="e.g. M.Ed, M.Sc" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="teacher-signup-experience">Experience</label>
+                    <input type="text" id="teacher-signup-experience" class="form-control" placeholder="e.g. 5 years" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="teacher-signup-password">Password</label>
+                    <input type="password" id="teacher-signup-password" class="form-control" placeholder="••••••••" minlength="6" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="teacher-signup-confirm-password">Confirm Password</label>
+                    <input type="password" id="teacher-signup-confirm-password" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary portal-submit-btn teacher" style="width: 100%; padding: 12px; margin-top: 15px;">
+                    <i class="fas fa-user-plus"></i> Create Teacher Account
+                </button>
+            </form>
+        </div>
+
+        <!-- Links to the other portals -->
+        <div class="login-portal-switch">
+            <a href="/login"><i class="fas fa-user-graduate"></i> Student Login</a>
+            <span class="login-portal-divider">•</span>
+            <a href="/admin/login"><i class="fas fa-user-shield"></i> Admin Login</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/portal-login.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/portal_login.js') }}"></script>
+{% endblock %}

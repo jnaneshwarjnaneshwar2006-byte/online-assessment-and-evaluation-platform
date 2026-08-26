@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}AI Quiz Generator - EduLearn Hub{% endblock %}
+
+{% block content %}
+<input type="hidden" id="user-role-val-holder" value="teacher">
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Teacher</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/students"><i class="fas fa-user-group"></i> My Students</a></li>
+            <li class="sidebar-item"><a href="/teacher/results"><i class="fas fa-clipboard-check"></i> Quiz Results</a></li>
+            <li class="sidebar-item"><a href="/teacher/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/create"><i class="fas fa-file-pen"></i> Create Quiz</a></li>
+            <li class="sidebar-item active"><a href="/teacher/quiz/ai-generator"><i class="fas fa-magic"></i> AI Quiz Generator</a></li>
+            <li class="sidebar-item"><a href="/activity-teacher"><i class="fas fa-list-check"></i> Action Log</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>AI Quiz Generator</h2>
+                <p>Generate smart test sheets instantly for Railway, SSC, or Banking classes powered by Google Gemini API.</p>
+            </div>
+            
+            <a href="/teacher/quiz/create" class="btn btn-secondary"><i class="fas fa-plus"></i> Manual Quiz Builder</a>
+        </div>
+
+        <div style="max-width: 600px; margin: 0 auto;">
+            <div class="glass-panel" style="padding: 30px;">
+                <h3 style="margin-bottom:20px; border-bottom:1px solid var(--border-color); padding-bottom:12px; font-size:1.25rem;"><i class="fas fa-wand-magic-sparkles" style="color:var(--primary); margin-right:8px;"></i> Gemini Generation Config</h3>
+                
+                <form id="ai-quiz-generator-form">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select id="ai-category" class="form-control" style="background:var(--bg-main);" required>
+                            <option value="SSC">SSC (General Knowledge/Reasoning)</option>
+                            <option value="Railway">Railway (Static awareness)</option>
+                            <option value="Banking">Banking (Financial awareness/Economic policies)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Difficulty</label>
+                        <select id="ai-difficulty" class="form-control" style="background:var(--bg-main);" required>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Number of Questions</label>
+                        <select id="ai-num-questions" class="form-control" style="background:var(--bg-main);" required>
+                            <option value="5" selected>5 Questions</option>
+                            <option value="10">10 Questions</option>
+                        </select>
+                    </div>
+
+                    <!-- Loader animation -->
+                    <div id="ai-generation-loader" style="display:none; align-items:center; gap:12px; margin-bottom:20px; padding:10px; background:rgba(59,130,246,0.05); border-radius:8px; border:1px solid rgba(59,130,246,0.15); color:var(--primary); font-size:0.9rem;">
+                        <i class="fas fa-spinner fa-spin" style="font-size:1.2rem;"></i>
+                        <span>Connecting to Google Gemini API... Drafting test paper.</span>
+                    </div>
+
+                    <button type="submit" id="ai-generate-btn" class="btn btn-primary" style="width: 100%; padding:12px;"><i class="fas fa-magic"></i> Generate Exam Paper</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/ai_quiz.js') }}"></script>
+{% endblock %}

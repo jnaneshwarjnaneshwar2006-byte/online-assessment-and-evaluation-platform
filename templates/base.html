@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EduLearn Hub - Competitive Exam Preparation{% endblock %}</title>
+    
+    <!-- Fonts and Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js (for Analytics) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Central Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar Header -->
+    <header class="main-header">
+        <div class="navbar-container">
+            <a href="/" class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="EL" style="height:32px; width:32px; border-radius:8px;">
+                <span>EduLearn Hub</span>
+            </a>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/about" class="nav-link">About</a></li>
+                    <li><a href="/faq" class="nav-link">FAQ</a></li>
+                    <li><a href="/contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="nav-actions">
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle-btn" class="btn btn-secondary" style="padding: 8px 12px; border-radius: 50%; width: 40px; height: 40px;">
+                    <i class="fas fa-sun"></i>
+                </button>
+                
+                {% if user %}
+                    <!-- Notification Bell -->
+                    <div style="position: relative;">
+                        <button id="notif-bell-btn" class="btn btn-secondary" style="padding: 8px 12px; border-radius: 50%; width: 40px; height: 40px;">
+                            <i class="fa-regular fa-bell"></i>
+                        </button>
+                        <span id="notif-count-badge" style="position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.75rem; display: none; align-items: center; justify-content: center; font-weight: bold;">0</span>
+                        
+                        <!-- Notifications Dropdown Menu -->
+                        <div id="notif-dropdown-menu" class="glass-panel" style="position: absolute; top: 50px; right: 0; width: 320px; max-height: 400px; overflow-y: auto; display: none; z-index: 100; padding: 15px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border-color);">
+                                <strong style="font-size:0.9rem;">Notifications</strong>
+                                <button onclick="markAllNotificationsAsRead()" style="background:none; border:none; color:var(--primary); font-size:0.8rem; cursor:pointer;">Clear All</button>
+                            </div>
+                            <div id="notif-items-list" class="notification-list">
+                                <!-- Loaded dynamically via main.js -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile dropdown -->
+                    <div style="position: relative;">
+                        <div id="profile-dropdown-trigger" class="profile-dropdown-btn">
+                            {% if user.avatar %}
+                                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="avatar-img">
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="avatar-img">
+                            {% endif %}
+                            <span style="font-size: 0.9rem; font-weight: 500; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ user.name.split(' ')[0] }}</span>
+                            <i class="fas fa-chevron-down" style="font-size:0.75rem; color:var(--text-secondary)"></i>
+                        </div>
+                        
+                        <div id="profile-dropdown-menu" class="glass-panel" style="position: absolute; top: 50px; right: 0; width: 180px; display: none; z-index: 100; padding: 8px;">
+                            <a href="/dashboard" class="nav-link" style="display:block; padding:10px; border-radius:8px;"><i class="fas fa-chart-line" style="margin-right:8px; width:16px;"></i> Dashboard</a>
+                            <a href="/profile" class="nav-link" style="display:block; padding:10px; border-radius:8px;"><i class="fas fa-user-gear" style="margin-right:8px; width:16px;"></i> Profile Settings</a>
+                            <hr style="border:none; border-top:1px solid var(--border-color); margin:5px 0;">
+                            <a href="/api/logout" class="nav-link" style="display:block; padding:10px; border-radius:8px; color:var(--danger);"><i class="fas fa-arrow-right-from-bracket" style="margin-right:8px; width:16px;"></i> Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Auth Actions -->
+                    <a href="/login" class="btn btn-secondary">Login</a>
+                    <a href="/signup" class="btn btn-primary">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main style="flex-grow: 1; display: flex; flex-direction: column;">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h4>EduLearn Hub</h4>
+                <p style="font-size:0.9rem; line-height:1.6; margin-top:10px;">
+                    Empowering competitive exam preparation (SSC, Railway, Banking) with state of the art AI technology.
+                </p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/faq">FAQ Support</a></li>
+                    <li><a href="/contact">Contact Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legals</h4>
+                <ul>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/terms">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 EduLearn Hub. All rights reserved. Powered by Google Gemini AI.</p>
+        </div>
+    </footer>
+
+    <!-- CSS / JS dropdown menu show/hide helpers -->
+    <style>
+        .show { display: block !important; }
+        .no-notifs { text-align: center; color: var(--text-muted); padding: 15px 0; font-size: 0.85rem; }
+    </style>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        function markAllNotificationsAsRead() {
+            fetch('/api/notifications/read-all', { method: 'POST' })
+                .then(res => res.json())
+                .then(() => {
+                    fetchNotifications();
+                    showToast("Cleared all notifications");
+                })
+                .catch(err => console.error(err));
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

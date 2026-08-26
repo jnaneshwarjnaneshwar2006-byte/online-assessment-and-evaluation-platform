@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - EduLearn Hub{% endblock %}
+
+{% block content %}
+<input type="hidden" id="dashboard-role-identifier" value="admin">
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Administrator</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item active"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/admin/students"><i class="fas fa-user-graduate"></i> Manage Students</a></li>
+            <li class="sidebar-item"><a href="/admin/teachers"><i class="fas fa-chalkboard-user"></i> Manage Teachers</a></li>
+            <li class="sidebar-item"><a href="/admin/create-teacher"><i class="fas fa-user-plus"></i> Onboard Teacher</a></li>
+            <li class="sidebar-item"><a href="/admin/blocked-users"><i class="fas fa-user-slash"></i> Blocked Accounts</a></li>
+            <li class="sidebar-item"><a href="/admin/activity-logs"><i class="fas fa-list-check"></i> System Logs</a></li>
+            <li class="sidebar-item"><a href="/admin/quiz-statistics"><i class="fas fa-chart-column"></i> Quiz Statistics</a></li>
+            <li class="sidebar-item"><a href="/admin/website-analytics"><i class="fas fa-globe"></i> Web Analytics</a></li>
+            <li class="sidebar-item"><a href="/admin/results-overview"><i class="fas fa-clipboard-list"></i> Quiz Results Overview</a></li>
+            <li class="sidebar-item"><a href="/admin/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Admin Control Center</h2>
+                <p>Monitor system configurations, users, and server activity audit logs.</p>
+            </div>
+            
+            <a href="/admin/create-teacher" class="btn btn-primary"><i class="fas fa-user-plus"></i> Onboard Teacher</a>
+        </div>
+
+        <!-- Quick Summary Metrics -->
+        <div class="stats-grid">
+            <div class="glass-panel stats-card primary fade-in-el">
+                <div class="stats-info">
+                    <span class="stats-label">Active Students</span>
+                    <span class="stats-value" id="dash-admin-students">0</span>
+                </div>
+                <div class="stats-icon"><i class="fas fa-user-graduate"></i></div>
+            </div>
+            
+            <div class="glass-panel stats-card secondary fade-in-el">
+                <div class="stats-info">
+                    <span class="stats-label">Registered Teachers</span>
+                    <span class="stats-value" id="dash-admin-teachers">0</span>
+                </div>
+                <div class="stats-icon"><i class="fas fa-chalkboard-user"></i></div>
+            </div>
+
+            <div class="glass-panel stats-card success fade-in-el">
+                <div class="stats-info">
+                    <span class="stats-label">Total Quizzes</span>
+                    <span class="stats-value" id="dash-admin-quizzes">0</span>
+                </div>
+                <div class="stats-icon"><i class="fas fa-folder-open"></i></div>
+            </div>
+        </div>
+
+        <!-- Grid -->
+        <div class="dashboard-grid" style="grid-template-columns: 1.6fr 1fr;">
+            <!-- Left panel -->
+            <div class="glass-panel" style="padding: 25px;">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-terminal" style="color:var(--success)"></i> Recent System Action Logs</h3>
+                    <a href="/admin/activity-logs" style="font-size:0.85rem; color:var(--primary);">View All Logs</a>
+                </div>
+                
+                <div class="custom-table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Action Type</th>
+                                <th>Operation Details</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-recent-logs-body">
+                            <!-- Loaded dynamically via javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right panel: Leaderboard teaser -->
+            <div class="glass-panel" style="padding: 25px;">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-ranking-star" style="color:var(--warning)"></i> Top Students</h3>
+                    <a href="/admin/leaderboard" style="font-size:0.85rem; color:var(--primary);">Full Leaderboard</a>
+                </div>
+                <div id="dash-leaderboard-teaser">
+                    <!-- Loaded dynamically via dashboard.js -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Results quick link banner -->
+        <div class="glass-panel" style="padding: 20px; margin-top: 25px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
+            <div>
+                <h4 style="margin-bottom:6px;"><i class="fas fa-clipboard-list" style="color:var(--primary); margin-right:8px;"></i> Full quiz oversight</h4>
+                <p style="color:var(--text-secondary); font-size:0.9rem;">See every quiz attempt by every student, across every teacher's quizzes.</p>
+            </div>
+            <a href="/admin/results-overview" class="btn btn-primary"><i class="fas fa-arrow-right"></i> Go to Quiz Results Overview</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

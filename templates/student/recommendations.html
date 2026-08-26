@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}AI Study Advisor - EduLearn Hub{% endblock %}
+
+{% block content %}
+<input type="hidden" id="user-role-val-holder" value="student">
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Student</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/student/quiz/list"><i class="fas fa-clipboard-question"></i> Mock Exams</a></li>
+            <li class="sidebar-item"><a href="/student/quiz/history"><i class="fas fa-clock-rotate-left"></i> Quiz History</a></li>
+            <li class="sidebar-item"><a href="/student/analytics"><i class="fas fa-chart-pie"></i> Score Analytics</a></li>
+            <li class="sidebar-item"><a href="/student/feedback"><i class="fas fa-comments"></i> Teacher Feedbacks</a></li>
+            <li class="sidebar-item active"><a href="/student/recommendations"><i class="fas fa-brain"></i> AI Study Advisor</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>AI Study Advisor</h2>
+                <p>Get personalized recommendations and generate customized exam papers powered by Google Gemini AI.</p>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; max-width: 1100px;">
+            <!-- Left panel: AI Recommendations -->
+            <div class="glass-panel" style="padding: 30px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:15px; margin-bottom:20px;">
+                    <h3 style="font-size:1.25rem;"><i class="fas fa-brain" style="color:var(--secondary); margin-right:8px;"></i> AI Weakness Analysis</h3>
+                    <span id="ai-source-badge" class="status-badge active" style="font-size:0.7rem;">Gemini active</span>
+                </div>
+                
+                <div id="ai-recs-box" class="notification-list">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Right panel: AI Quiz Generator Form -->
+            <div class="glass-panel" style="padding: 30px; height:fit-content;">
+                <h3 style="margin-bottom:20px; border-bottom:1px solid var(--border-color); padding-bottom:15px; font-size:1.25rem;"><i class="fas fa-wand-magic-sparkles" style="color:var(--primary); margin-right:8px;"></i> AI Exam Generator</h3>
+                
+                <form id="ai-quiz-generator-form">
+                    <div class="form-group">
+                        <label class="form-label">Target Category</label>
+                        <select id="ai-category" class="form-control" style="background:var(--bg-main);" required>
+                            <option value="SSC">Staff Selection Commission (SSC)</option>
+                            <option value="Railway">Indian Railways (RRB)</option>
+                            <option value="Banking">Banking (IBPS, SBI)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Target Difficulty</label>
+                        <select id="ai-difficulty" class="form-control" style="background:var(--bg-main);" required>
+                            <option value="Easy">Easy (Conceptual practice)</option>
+                            <option value="Medium" selected>Medium (Standard level)</option>
+                            <option value="Hard">Hard (Advanced questions)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Number of Questions</label>
+                        <select id="ai-num-questions" class="form-control" style="background:var(--bg-main);" required>
+                            <option value="5" selected>5 Questions</option>
+                            <option value="10">10 Questions</option>
+                        </select>
+                    </div>
+
+                    <!-- Loader animation -->
+                    <div id="ai-generation-loader" style="display:none; align-items:center; gap:12px; margin-bottom:20px; padding:10px; background:rgba(59,130,246,0.05); border-radius:8px; border:1px solid rgba(59,130,246,0.15); color:var(--primary); font-size:0.9rem;">
+                        <i class="fas fa-spinner fa-spin" style="font-size:1.2rem;"></i>
+                        <span>Connecting to Google Gemini API... Please wait while we generate your customized test paper.</span>
+                    </div>
+
+                    <button type="submit" id="ai-generate-btn" class="btn btn-primary" style="width: 100%; padding:12px;"><i class="fas fa-magic"></i> Generate Exam Paper</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/ai_quiz.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const recsBox = document.getElementById("ai-recs-box");
+        const sourceBadge = document.getElementById("ai-source-badge");
+
+        fetch("/api/student/recommendations")
+            .then(res => res.json())
+            .then(data => {
+                sourceBadge.textContent = data.source === "gemini_api" ? "Gemini Pro" : "Local Analyzer";
+                sourceBadge.className = `status-badge ${data.source === "gemini_api" ? 'active' : 'warning'}`;
+
+                recsBox.innerHTML = data.recommendations.map(rec => `
+                    <div class="notification-item fade-in-el" style="background:rgba(255,255,255,0.01);">
+                        <div class="notif-icon" style="color:var(--secondary);"><i class="fas fa-lightbulb"></i></div>
+                        <div class="notif-details">
+                            <div class="notif-desc" style="font-size:0.95rem; line-height:1.5; color:var(--text-primary);">${escapeHTML(rec)}</div>
+                        </div>
+                    </div>
+                `).join("");
+            })
+            .catch(err => console.error(err));
+    });
+</script>
+{% endblock %}

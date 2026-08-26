@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Feedbacks - EduLearn Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Teacher</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/students"><i class="fas fa-user-group"></i> My Students</a></li>
+            <li class="sidebar-item"><a href="/teacher/results"><i class="fas fa-clipboard-check"></i> Quiz Results</a></li>
+            <li class="sidebar-item"><a href="/teacher/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/create"><i class="fas fa-file-pen"></i> Create Quiz</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/ai-generator"><i class="fas fa-magic"></i> AI Quiz Generator</a></li>
+            <li class="sidebar-item"><a href="/activity-teacher"><i class="fas fa-list-check"></i> Action Log</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Feedback Logs</h2>
+                <p>History of all feedback reports you have issued to students</p>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="padding: 30px; max-width: 900px;">
+            <h3 style="margin-bottom: 20px; font-size:1.2rem;"><i class="fas fa-comment-medical" style="color:var(--primary); margin-right:8px;"></i> Feedback History</h3>
+            
+            <div id="teacher-feedback-history-list" class="notification-list">
+                <!-- Loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const list = document.getElementById("teacher-feedback-history-list");
+        fetch("/api/student/feedback") // Without student_id returns given feedback
+            .then(res => res.json())
+            .then(data => {
+                // Filter feedbacks where teacher_id matches current user
+                const teacherId = "{{ user.user_id }}";
+                const given = data.filter(f => f.teacher_id === teacherId);
+                
+                if (given.length === 0) {
+                    list.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:20px;">You have not submitted any feedbacks yet. Go to Students -> View Profile to submit evaluations.</div>';
+                    return;
+                }
+
+                list.innerHTML = given.map(f => `
+                    <div class="notification-item fade-in-el" style="background:rgba(255,255,255,0.01); flex-direction:column; gap:8px;">
+                        <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                            <span class="status-badge active" style="font-size:0.75rem;">${escapeHTML(f.feedback_type)}</span>
+                            <span style="font-size:0.8rem; color:var(--text-muted);">${formatDate(f.created_at)}</span>
+                        </div>
+                        <h4 style="margin-top:4px;">${escapeHTML(f.title)}</h4>
+                        <p style="color:var(--text-secondary); line-height:1.5; font-size:0.95rem; margin-top:4px;">${escapeHTML(f.message)}</p>
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:8px; border-top:1px solid var(--border-color); padding-top:10px; font-size:0.8rem; color:var(--text-muted);">
+                            <span>Student ID: <strong>${f.student_id}</strong></span>
+                            <span>Topic: <strong>${escapeHTML(f.topic || 'General')}</strong></span>
+                            <span>Status: <strong>${f.is_read === 1 ? '<i class="fas fa-check-double"></i> Read' : 'Unread'}</strong></span>
+                        </div>
+                    </div>
+                `).join("");
+            })
+            .catch(err => console.error(err));
+    });
+</script>
+{% endblock %}

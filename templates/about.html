@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - EduLearn Hub{% endblock %}
+
+{% block content %}
+<section class="fade-in-el" style="padding: 60px 20px; max-width: 800px; margin: 0 auto; width:100%;">
+    <div class="glass-panel" style="padding: 40px; line-height: 1.8;">
+        <h1 style="font-size: 2.2rem; margin-bottom: 20px; text-align: center; font-family: 'Outfit';">About EduLearn Hub</h1>
+        
+        <p style="font-size: 1.05rem; margin-bottom: 15px; color: var(--text-primary);">
+            EduLearn Hub is a next-generation AI-powered mock preparation and online evaluation platform for competitive exams like Railway, SSC, and Banking in India.
+        </p>
+
+        <p style="margin-bottom: 15px; color: var(--text-secondary);">
+            Our platform allows students to register, attempt dynamic AI-generated quiz questions based on their weak topics, and view comprehensive performance analysis.
+            We integrate state of the art LLM technologies (specifically Google Gemini Pro API) to generate unique sets of high quality test questions on-demand.
+        </p>
+
+        <h3 style="color:var(--primary); margin-top:25px; margin-bottom:10px;">Our Key Objectives</h3>
+        <ul style="padding-left:20px; color:var(--text-secondary); margin-bottom:20px;">
+            <li>Smart test personalization to address individual student weaknesses.</li>
+            <li>On-demand question bank generation with zero delay.</li>
+            <li>Role-based coordination between teachers, students, and system administrators.</li>
+            <li>Interactive analytics using visual data dashboards.</li>
+        </ul>
+
+        <hr style="border:none; border-top:1px solid var(--border-color); margin:25px 0;">
+
+        <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+            EduLearn Hub was designed by the Google DeepMind team as a demonstration of a modern evaluation platform.
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Available Quizzes - EduLearn Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Student</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item active"><a href="/student/quiz/list"><i class="fas fa-clipboard-question"></i> Mock Exams</a></li>
+            <li class="sidebar-item"><a href="/student/quiz/history"><i class="fas fa-clock-rotate-left"></i> Quiz History</a></li>
+            <li class="sidebar-item"><a href="/student/analytics"><i class="fas fa-chart-pie"></i> Score Analytics</a></li>
+            <li class="sidebar-item"><a href="/student/feedback"><i class="fas fa-comments"></i> Teacher Feedbacks</a></li>
+            <li class="sidebar-item"><a href="/student/recommendations"><i class="fas fa-brain"></i> AI Study Advisor</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Available Exams</h2>
+                <p>Select a preparation exam or generate a custom AI test paper</p>
+            </div>
+            
+            <a href="/student/recommendations" class="btn btn-primary"><i class="fas fa-magic"></i> AI Study Advisor</a>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="glass-panel quiz-filter-bar" style="padding:15px; margin-bottom:30px; display:flex; gap:20px; align-items:center;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <label class="form-label" style="margin-bottom:0;">Category:</label>
+                <select id="filter-category" class="form-control" style="background:var(--bg-main); padding:6px 12px;">
+                    <option value="">All Categories</option>
+                    <option value="Railway">Railway</option>
+                    <option value="SSC">SSC</option>
+                    <option value="Banking">Banking</option>
+                </select>
+            </div>
+            
+            <div style="display:flex; align-items:center; gap:10px;">
+                <label class="form-label" style="margin-bottom:0;">Difficulty:</label>
+                <select id="filter-difficulty" class="form-control" style="background:var(--bg-main); padding:6px 12px;">
+                    <option value="">All Difficulties</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Quiz List Grid -->
+        <div id="quiz-list-grid" class="quiz-grid">
+            <!-- Loaded dynamically via quiz.js -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %}

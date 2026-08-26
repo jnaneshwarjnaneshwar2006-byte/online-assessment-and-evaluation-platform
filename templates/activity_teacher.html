@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Activity - EduLearn Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>{{ user.role }}</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/students"><i class="fas fa-user-group"></i> My Students</a></li>
+            <li class="sidebar-item"><a href="/teacher/results"><i class="fas fa-clipboard-check"></i> Quiz Results</a></li>
+            <li class="sidebar-item"><a href="/teacher/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item active"><a href="/activity-teacher"><i class="fas fa-list-check"></i> Action Log</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Teacher Activity Audit</h2>
+                <p>Track your quiz generations and student evaluations</p>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="padding:30px; max-width: 900px;">
+            <h3 style="margin-bottom:20px; font-size:1.2rem;"><i class="fas fa-terminal" style="color:var(--secondary); margin-right:8px;"></i> Teacher Event Log</h3>
+            
+            <div id="teacher-logs-console" class="logs-console" style="max-height: 450px; color:#c084fc;">
+                <!-- Loaded dynamically via js -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const consoleEl = document.getElementById("teacher-logs-console");
+        fetch("/api/teacher/activities")
+            .then(res => res.json())
+            .then(logs => {
+                if (logs.length === 0) {
+                    consoleEl.innerHTML = '<div class="log-row">No teacher actions recorded.</div>';
+                    return;
+                }
+                consoleEl.innerHTML = logs.map(log => `
+                    <div class="log-row">
+                        <span class="log-timestamp" style="color:#a78bfa;">[${new Date(log.created_at).toISOString()}]</span> 
+                        <span class="log-action" style="color:#fbbf24;">${escapeHTML(log.action)}</span> - 
+                        <span class="log-details" style="color:#f3f4f6;">${escapeHTML(log.details)}</span> 
+                        <small style="color:var(--text-muted)">[IP: ${log.ip_address}]</small>
+                    </div>
+                `).join("");
+            })
+            .catch(err => console.error(err));
+    });
+</script>
+{% endblock %}

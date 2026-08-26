@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Analytics - EduLearn Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Teacher</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/students"><i class="fas fa-user-group"></i> My Students</a></li>
+            <li class="sidebar-item"><a href="/teacher/results"><i class="fas fa-clipboard-check"></i> Quiz Results</a></li>
+            <li class="sidebar-item"><a href="/teacher/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/create"><i class="fas fa-file-pen"></i> Create Quiz</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/ai-generator"><i class="fas fa-magic"></i> AI Quiz Generator</a></li>
+            <li class="sidebar-item"><a href="/activity-teacher"><i class="fas fa-list-check"></i> Action Log</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Teaching Analytics</h2>
+                <p>Track your generated quizzes and classroom performance averages</p>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="padding: 30px; max-width: 800px; text-align: center;">
+            <h3 style="margin-bottom:20px; font-size:1.25rem;"><i class="fas fa-chart-column" style="color:var(--primary); margin-right:8px;"></i> Classroom Summary</h3>
+            <div class="stats-grid" style="margin-top: 20px;">
+                <div class="glass-panel stats-card primary">
+                    <div class="stats-info">
+                        <span class="stats-label">Quizzes Drafted</span>
+                        <span id="quizzes-count" class="stats-value">0</span>
+                    </div>
+                </div>
+                <div class="glass-panel stats-card secondary">
+                    <div class="stats-info">
+                        <span class="stats-label">Feedback Written</span>
+                        <span id="feedbacks-count" class="stats-value">0</span>
+                    </div>
+                </div>
+                <div class="glass-panel stats-card success">
+                    <div class="stats-info">
+                        <span class="stats-label">Students Avg</span>
+                        <span id="avg-percent" class="stats-value">0.0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch("/api/teacher/activity-stats")
+            .then(res => res.json())
+            .then(stats => {
+                document.getElementById("quizzes-count").textContent = stats.quizzes_created;
+                document.getElementById("feedbacks-count").textContent = stats.feedback_submitted;
+                document.getElementById("avg-percent").textContent = `${stats.avg_score_on_quizzes.toFixed(1)}%`;
+            })
+            .catch(err => console.error(err));
+    });
+</script>
+{% endblock %}

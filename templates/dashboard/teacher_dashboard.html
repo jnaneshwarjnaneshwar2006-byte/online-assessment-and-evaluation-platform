@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Dashboard - EduLearn Hub{% endblock %}
+
+{% block content %}
+<input type="hidden" id="dashboard-role-identifier" value="teacher">
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Teacher</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item active"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/students"><i class="fas fa-user-group"></i> My Students</a></li>
+            <li class="sidebar-item"><a href="/teacher/results"><i class="fas fa-clipboard-check"></i> Quiz Results</a></li>
+            <li class="sidebar-item"><a href="/teacher/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/create"><i class="fas fa-file-pen"></i> Create Quiz</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/ai-generator"><i class="fas fa-magic"></i> AI Quiz Generator</a></li>
+            <li class="sidebar-item"><a href="/activity-teacher"><i class="fas fa-list-check"></i> Action Log</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Teacher Workspace</h2>
+                <p>Welcome back, Educator {{ user.name.split(' ')[0] }}! Manage your students and generate quizzes.</p>
+            </div>
+            
+            <div style="display:flex; gap:12px;">
+                <a href="/teacher/quiz/ai-generator" class="btn btn-primary"><i class="fas fa-magic"></i> AI Quiz Generator</a>
+                <a href="/teacher/quiz/create" class="btn btn-secondary"><i class="fas fa-plus"></i> Create Quiz</a>
+            </div>
+        </div>
+
+        <!-- Quick Summary Metrics -->
+        <div class="stats-grid">
+            <div class="glass-panel stats-card primary fade-in-el">
+                <div class="stats-info">
+                    <span class="stats-label">Quizzes Created</span>
+                    <span class="stats-value" id="dash-teacher-quizzes">0</span>
+                </div>
+                <div class="stats-icon"><i class="fas fa-book"></i></div>
+            </div>
+            
+            <div class="glass-panel stats-card secondary fade-in-el">
+                <div class="stats-info">
+                    <span class="stats-label">Feedbacks Submitted</span>
+                    <span class="stats-value" id="dash-teacher-feedbacks">0</span>
+                </div>
+                <div class="stats-icon"><i class="fas fa-comment-medical"></i></div>
+            </div>
+
+            <div class="glass-panel stats-card success fade-in-el">
+                <div class="stats-info">
+                    <span class="stats-label">Student Avg Score</span>
+                    <span class="stats-value" id="dash-teacher-student-avg">0.0%</span>
+                </div>
+                <div class="stats-icon"><i class="fas fa-users"></i></div>
+            </div>
+        </div>
+
+        <!-- Grid -->
+        <div class="dashboard-grid" style="grid-template-columns: 1.6fr 1fr;">
+            <!-- Left panel -->
+            <div class="glass-panel" style="padding: 25px;">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-clock-rotate-left" style="color:var(--secondary)"></i> Recent Teacher Actions</h3>
+                    <a href="/activity-teacher" style="font-size:0.85rem; color:var(--primary);">View All</a>
+                </div>
+                
+                <div class="custom-table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Action Taken</th>
+                                <th>Details</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teacher-recent-activities-body">
+                            <!-- Loaded dynamically via javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right panel: Leaderboard teaser -->
+            <div class="glass-panel" style="padding: 25px;">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-ranking-star" style="color:var(--warning)"></i> Top Students</h3>
+                    <a href="/teacher/leaderboard" style="font-size:0.85rem; color:var(--primary);">Full Leaderboard</a>
+                </div>
+                <div id="dash-leaderboard-teaser">
+                    <!-- Loaded dynamically via dashboard.js -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Results quick link banner -->
+        <div class="glass-panel" style="padding: 20px; margin-top: 25px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
+            <div>
+                <h4 style="margin-bottom:6px;"><i class="fas fa-clipboard-check" style="color:var(--primary); margin-right:8px;"></i> Looking for student results?</h4>
+                <p style="color:var(--text-secondary); font-size:0.9rem;">View per-quiz scores, pass/fail breakdowns and question-wise analysis.</p>
+            </div>
+            <a href="/teacher/results" class="btn btn-primary"><i class="fas fa-arrow-right"></i> Go to Quiz Results</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

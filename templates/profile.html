@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Profile Settings - EduLearn Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>{{ user.role }}</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item active"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Account Settings</h2>
+                <p>Manage your login settings and profile information</p>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 1000px;">
+            <!-- Profile Info Form -->
+            <div class="glass-panel" style="padding: 30px;">
+                <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;"><i class="fas fa-id-card" style="color:var(--primary); margin-right:8px;"></i> Profile Info</h3>
+                
+                <!-- Avatar Preview -->
+                <div style="display:flex; align-items:center; gap:20px; margin-bottom:25px;">
+                    <img id="profile-avatar-preview" src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2.5px solid var(--primary);">
+                    <div>
+                        <label for="profile-avatar-file" class="btn btn-secondary" style="font-size:0.85rem; padding: 6px 12px; cursor:pointer;"><i class="fas fa-camera"></i> Change Photo</label>
+                        <input type="file" id="profile-avatar-file" accept="image/*" style="display:none;">
+                        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Supports JPEG, PNG. Max size 2MB.</p>
+                    </div>
+                </div>
+
+                <form id="profile-settings-form">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="profile-name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mobile Number</label>
+                        <input type="tel" id="profile-mobile" class="form-control" pattern="[0-9]{10}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address (Read-only)</label>
+                        <input type="email" id="profile-email-readonly" class="form-control" style="background:rgba(255,255,255,0.01); color:var(--text-muted);" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Account Role</label>
+                        <input type="text" id="profile-role-readonly" class="form-control" style="background:rgba(255,255,255,0.01); color:var(--text-muted);" readonly>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="padding:10px 20px; margin-top:10px;">Save Profile Details</button>
+                </form>
+            </div>
+
+            <!-- Password Change Form -->
+            <div class="glass-panel" style="padding: 30px;">
+                <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;"><i class="fas fa-lock" style="color:var(--secondary); margin-right:8px;"></i> Change Password</h3>
+                
+                <form id="profile-password-form">
+                    <div class="form-group">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" id="profile-old-pass" class="form-control" required placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <input type="password" id="profile-new-pass" class="form-control" required placeholder="••••••••" minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" id="profile-confirm-pass" class="form-control" required placeholder="••••••••">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="padding:10px 20px; margin-top:10px;">Update Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

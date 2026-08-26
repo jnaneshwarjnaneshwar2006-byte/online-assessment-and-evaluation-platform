@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Results Overview - EduLearn Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Administrator</span>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/admin/students"><i class="fas fa-user-graduate"></i> Manage Students</a></li>
+            <li class="sidebar-item"><a href="/admin/teachers"><i class="fas fa-chalkboard-user"></i> Manage Teachers</a></li>
+            <li class="sidebar-item"><a href="/admin/create-teacher"><i class="fas fa-user-plus"></i> Onboard Teacher</a></li>
+            <li class="sidebar-item"><a href="/admin/blocked-users"><i class="fas fa-user-slash"></i> Blocked Accounts</a></li>
+            <li class="sidebar-item"><a href="/admin/activity-logs"><i class="fas fa-list-check"></i> System Logs</a></li>
+            <li class="sidebar-item"><a href="/admin/quiz-statistics"><i class="fas fa-chart-column"></i> Quiz Statistics</a></li>
+            <li class="sidebar-item"><a href="/admin/website-analytics"><i class="fas fa-globe"></i> Web Analytics</a></li>
+            <li class="sidebar-item active"><a href="/admin/results-overview"><i class="fas fa-clipboard-list"></i> Quiz Results Overview</a></li>
+            <li class="sidebar-item"><a href="/admin/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Quiz Results Overview</h2>
+                <p>Every quiz on the platform, created by any teacher, with full performance access</p>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="glass-panel" style="padding: 20px; margin-bottom:25px; display:flex; gap:15px; flex-wrap:wrap; align-items:flex-end;">
+            <div>
+                <label class="form-label" style="display:block; margin-bottom:8px;">Filter by Category</label>
+                <select id="overview-category-filter" class="form-control" style="min-width:180px;">
+                    <option value="">All Categories</option>
+                    <option value="Railway">Railway</option>
+                    <option value="SSC">SSC</option>
+                    <option value="Banking">Banking</option>
+                </select>
+            </div>
+            <div>
+                <label class="form-label" style="display:block; margin-bottom:8px;">Filter by Teacher</label>
+                <select id="overview-teacher-filter" class="form-control" style="min-width:220px;">
+                    <option value="">All Teachers</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="padding: 25px;">
+            <div class="custom-table-container">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Quiz Title</th>
+                            <th>Created By</th>
+                            <th>Category</th>
+                            <th>Difficulty</th>
+                            <th>Attempts</th>
+                            <th>Class Average</th>
+                            <th>Highest</th>
+                            <th>Lowest</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-quiz-overview-body">
+                        <!-- Loaded dynamically via admin_results.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin_results.js') }}"></script>
+{% endblock %}

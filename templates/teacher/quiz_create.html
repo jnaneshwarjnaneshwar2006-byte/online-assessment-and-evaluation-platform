@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Create Quiz - EduLearn Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            {% if user.avatar %}
+                <img src="/uploads/avatars/{{ user.avatar }}" alt="" class="sidebar-avatar">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=3b82f6&color=fff" alt="" class="sidebar-avatar">
+            {% endif %}
+            <div class="sidebar-user-info">
+                <h4>{{ user.name }}</h4>
+                <span>Teacher</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li class="sidebar-item"><a href="/teacher/students"><i class="fas fa-user-group"></i> My Students</a></li>
+            <li class="sidebar-item"><a href="/teacher/results"><i class="fas fa-clipboard-check"></i> Quiz Results</a></li>
+            <li class="sidebar-item"><a href="/teacher/leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</a></li>
+            <li class="sidebar-item active"><a href="/teacher/quiz/create"><i class="fas fa-file-pen"></i> Create Quiz</a></li>
+            <li class="sidebar-item"><a href="/teacher/quiz/ai-generator"><i class="fas fa-magic"></i> AI Quiz Generator</a></li>
+            <li class="sidebar-item"><a href="/activity-teacher"><i class="fas fa-list-check"></i> Action Log</a></li>
+            <li class="sidebar-item"><a href="/profile"><i class="fas fa-user-gear"></i> Settings</a></li>
+            <li class="sidebar-item"><a href="/api/logout"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Create Mock Exam</h2>
+                <p>Manually build custom questions and insert correct answers/explanations</p>
+            </div>
+            
+            <a href="/teacher/quiz/ai-generator" class="btn btn-secondary"><i class="fas fa-magic"></i> Try AI Quiz Generator</a>
+        </div>
+
+        <!-- Form container -->
+        <div class="quiz-builder-section">
+            <form id="manual-quiz-creator-form">
+                <div class="glass-panel" style="padding: 25px; margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; font-size:1.15rem;"><i class="fas fa-file-invoice" style="color:var(--primary)"></i> Quiz Settings</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Exam Title</label>
+                        <input type="text" id="quiz-title" class="form-control" placeholder="e.g. Railway General Knowledge Mini Mock" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select id="quiz-category" class="form-control" style="background:var(--bg-main);" required>
+                                <option value="Railway">Railway</option>
+                                <option value="SSC">SSC</option>
+                                <option value="Banking">Banking</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Difficulty</label>
+                            <select id="quiz-difficulty" class="form-control" style="background:var(--bg-main);" required>
+                                <option value="Easy">Easy</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Duration (Minutes)</label>
+                            <input type="number" id="quiz-duration" class="form-control" min="1" max="180" value="10" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questions Builder card lists -->
+                <div id="questions-builder-list">
+                    <!-- Added dynamically via teacher.js -->
+                </div>
+
+                <!-- Footer action buttons -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; margin-bottom:50px;">
+                    <button type="button" id="add-question-card-btn" class="btn btn-secondary"><i class="fas fa-plus"></i> Add Question Card</button>
+                    <button type="submit" class="btn btn-primary" style="padding:12px 30px;"><i class="fas fa-circle-check"></i> Save and Publish Quiz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/teacher.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/teacher.js') }}"></script>
+{% endblock %}
